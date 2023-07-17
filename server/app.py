@@ -28,6 +28,18 @@ from models import User, Recipe
 # api.add_resource(Logout, '/logout', endpoint='logout')
 # api.add_resource(RecipeIndex, '/recipes', endpoint='recipes')
 
+excluded_endpoints = ['signup', 'check_session', 'login', 'logout']
+
+@app.before_request
+def check_is_logged_in():
+    if request.endpoint not in excluded_endpoints:
+        user_id = session.get('user_id')
+        user = User.query.filter(User.id == user_id).first()
+
+        if not user:
+            return {'error': 'User is not logged in'}, 401
+
+
 @app.post('/signup')
 def signup():
     # get json from request
