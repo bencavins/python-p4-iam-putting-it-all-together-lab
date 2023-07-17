@@ -7,27 +7,6 @@ from sqlalchemy.exc import IntegrityError
 from config import app, db, api
 from models import User, Recipe
 
-# class Signup(Resource):
-#     pass
-
-# class CheckSession(Resource):
-#     pass
-
-# class Login(Resource):
-#     pass
-
-# class Logout(Resource):
-#     pass
-
-# class RecipeIndex(Resource):
-#     pass
-
-# api.add_resource(Signup, '/signup', endpoint='signup')
-# api.add_resource(CheckSession, '/check_session', endpoint='check_session')
-# api.add_resource(Login, '/login', endpoint='login')
-# api.add_resource(Logout, '/logout', endpoint='logout')
-# api.add_resource(RecipeIndex, '/recipes', endpoint='recipes')
-
 excluded_endpoints = ['signup', 'check_session', 'login', 'logout']
 
 @app.before_request
