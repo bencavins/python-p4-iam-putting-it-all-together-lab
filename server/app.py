@@ -7,26 +7,44 @@ from sqlalchemy.exc import IntegrityError
 from config import app, db, api
 from models import User, Recipe
 
-class Signup(Resource):
+@app.post('/signup')
+def signup():
     pass
 
-class CheckSession(Resource):
-    pass
+@app.get('/check_session')
+def check_session():
+    # get user_id from cookies
+    user_id = session.get('user_id')
+    # query db for that user
+    user = User.query.filter(
+        User.id == user_id
+    ).first()
 
-class Login(Resource):
-    pass
+    if not user:
+        return {'error': 'Not authorized'}, 401
+    
+    return user.to_dict(), 200
 
-class Logout(Resource):
-    pass
+@app.post('/login')
+def login():
+    # get username/pass from request
+    data = request.get_json()
+    # query db for user
+    user = User.query.filter(
+        User.username == data.get('username')
+    ).first()
 
-class RecipeIndex(Resource):
-    pass
+    # check user exists and password matches
+    if not user or not user.authenticate(data.get('password')):
+        return {'error': 'Invalid login'}, 401
+    
+    # save user id as browser cookie
+    session['user_id'] = user.id
+    return user.to_dict(), 201
 
-api.add_resource(Signup, '/signup', endpoint='signup')
-api.add_resource(CheckSession, '/check_session', endpoint='check_session')
-api.add_resource(Login, '/login', endpoint='login')
-api.add_resource(Logout, '/logout', endpoint='logout')
-api.add_resource(RecipeIndex, '/recipes', endpoint='recipes')
+@app.delete('/logout')
+def logout():
+    pass
 
 
 if __name__ == '__main__':
