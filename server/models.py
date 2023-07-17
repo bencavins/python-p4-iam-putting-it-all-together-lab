@@ -13,7 +13,7 @@ class User(db.Model, SerializerMixin):
     bio = db.Column(db.String)
 
     # one to many with Recipe
-    recipies = db.relationship('Recipe', backref='user')
+    recipes = db.relationship('Recipe', backref='user')
 
     @hybrid_property
     def password_hash(self):
